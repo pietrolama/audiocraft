@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # AudioCraft Text-to-Audio Generator
 
 Web-app completa per generare audio da testo usando Meta AudioCraft (MusicGen e AudioGen).
@@ -42,7 +41,7 @@ Vedi [README_WINDOWS.md](README_WINDOWS.md) per dettagli.
 ### 1. Clona il repository
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/pietrolama/audiocraft.git
 cd audiocraft
 ```
 
@@ -229,7 +228,3 @@ In breve:
 
 **Buona generazione audio! 🎵**
 
-=======
-# audiocraft
-an AI based system to generate audio and music
->>>>>>> 9e588f5d5335f65e1dabd4ab46ccf0c84723dd95
