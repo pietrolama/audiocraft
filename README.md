@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # AudioCraft Text-to-Audio Generator
 
 Web-app completa per generare audio da testo usando Meta AudioCraft (MusicGen e AudioGen).
@@ -228,3 +229,7 @@ In breve:
 
 **Buona generazione audio! 🎵**
 
+=======
+# audiocraft
+an AI based system to generate audio and music
+>>>>>>> 9e588f5d5335f65e1dabd4ab46ccf0c84723dd95
