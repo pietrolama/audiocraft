@@ -1,0 +1,81 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/data
+      - ./backend:/app
+      # Uncomment and adjust path to share HuggingFace cache between host and container
+      # - ~/.cache/huggingface:/root/.cache/huggingface  # Linux/Mac
+      # - C:/Users/YourUsername/.cache/huggingface:/root/.cache/huggingface  # Windows
+    environment:
+      - DEVICE=${DEVICE:-auto}
+      - MODEL_DEFAULT=${MODEL_DEFAULT:-musicgen-small}
+      - MAX_DURATION=${MAX_DURATION:-30}
+      - OUTPUT_DIR=/data/outputs
+      - RATE_LIMIT_PER_HOUR=${RATE_LIMIT_PER_HOUR:-20}
+      - ALLOW_ORIGINS=${ALLOW_ORIGINS:-http://localhost:3000}
+      - AUDIO_FORMAT=${AUDIO_FORMAT:-wav}
+      - HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN:-}
+    profiles:
+      - cpu
+
+  backend-gpu:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.gpu
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/data
+      - ./backend:/app
+      # Uncomment and adjust path to share HuggingFace cache between host and container
+      # - ~/.cache/huggingface:/root/.cache/huggingface  # Linux/Mac
+      # - C:/Users/YourUsername/.cache/huggingface:/root/.cache/huggingface  # Windows
+    environment:
+      - DEVICE=${DEVICE:-cuda}
+      - MODEL_DEFAULT=${MODEL_DEFAULT:-musicgen-medium}
+      - MAX_DURATION=${MAX_DURATION:-30}
+      - OUTPUT_DIR=/data/outputs
+      - RATE_LIMIT_PER_HOUR=${RATE_LIMIT_PER_HOUR:-20}
+      - ALLOW_ORIGINS=${ALLOW_ORIGINS:-http://localhost:3000}
+      - AUDIO_FORMAT=${AUDIO_FORMAT:-wav}
+      - HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN:-}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    profiles:
+      - gpu
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    profiles:
+      - cpu
+
+  frontend-gpu:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - backend-gpu
+    profiles:
+      - gpu
